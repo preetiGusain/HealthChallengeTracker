@@ -1,0 +1,29 @@
+<form [formGroup]="workoutForm">
+  <div>
+    <label for="user-name">User Name*</label>
+    <input type="text" formControlName="userName"/>
+  </div>
+
+  <div>
+    <label for="workout-type">Workout Type*
+      <select id="workout-type" name="workout-type" formControlName="workoutType">
+        <option value="Cycling">Cycling</option>
+        <option value="Running">Running</option>
+        <option value="Swimming">Swimming</option>
+        <option value="Hiking">Hiking</option>
+        <option value="Yoga">Yoga</option>
+        <option value="Strength Training">Strength Training</option>
+      </select>
+    </label>
+  </div>
+
+  <div>
+    <label for="workout-minutes">Workout Minutes*
+      <input type="number" formControlName="workoutMinutes"/>
+    </label>
+  </div>
+
+  <div>
+    <button (click)="storeUserInput()">Add Workout</button>
+  </div>
+</form>

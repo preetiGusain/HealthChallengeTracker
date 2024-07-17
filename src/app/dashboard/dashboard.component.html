@@ -1,0 +1,14 @@
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Workouts</th>
+        <th>Number of Workouts</th>
+        <th>Total Workout Minutes</th>
+    </tr>
+    <tr *ngFor="let data of userData">
+        <td>{{data.name}}</td>
+        <td>{{data.workouts}}</td>
+        <td>{{data.numberOfWorkouts}}</td>
+        <td>{{data.totalWorkoutMinutes}}</td>
+    </tr>
+</table>
