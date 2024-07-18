@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LocalstorageService } from '../localstorage.service';
 const key: string = 'userData'; // the key for localStorage
 
 
@@ -10,9 +11,13 @@ const key: string = 'userData'; // the key for localStorage
 export class DashboardComponent implements OnInit {
   userData: any[] = [];
 
-  constructor() { }
+  constructor(localStorageService: LocalstorageService) {
+    
+  }
 
   ngOnInit(): void {
+
+
     var x = localStorage.getItem(key);
     if (x === null) {
       this.userData = [];
