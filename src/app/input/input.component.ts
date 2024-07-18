@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
+import { LocalstorageService } from '../localstorage.service';
 
 const key: string = 'userData'; // the key for localStorage
 
@@ -9,8 +10,12 @@ const key: string = 'userData'; // the key for localStorage
   styleUrls: ['./input.component.css']
 })
 export class InputComponent implements OnInit {
+  userNameError: boolean = false;
+  workoutTypeError: boolean = false;
+  workoutMinuteAbsentError: boolean = false;
+  workoutMinuteInvalidError: boolean = false;
 
-  constructor() { }
+  constructor(private localStorageService: LocalstorageService) { }
 
   ngOnInit(): void {
   }
@@ -18,40 +23,34 @@ export class InputComponent implements OnInit {
   workoutForm = new FormGroup({
     userName: new FormControl(''),
     workoutType: new FormControl(''),
-    workoutMinutes: new FormControl(0),
+    workoutMinutes: new FormControl(),
   })
 
   storeUserInput() {
-    var x = localStorage.getItem(key);
-    var dataToSave;
-    if(x === null) {
-      dataToSave = [];
-    } else {
-      dataToSave = JSON.parse(x);
+    this.clearErrors();
+
+    if(!this.workoutForm.value.userName) {
+      this.userNameError = true;
+    } else if(!this.workoutForm.value.workoutType) {
+      this.workoutTypeError = true;
+    } else if(!this.workoutForm.value.workoutMinutes) {
+      this.workoutMinuteAbsentError = true;
+    } else if (this.workoutForm.value.workoutMinutes <= 0) {
+      this.workoutMinuteInvalidError = true;
+    } else if(this.workoutForm.value.userName && this.workoutForm.value.workoutType && this.workoutForm.value.workoutMinutes) {
+      this.localStorageService.setUserData(this.workoutForm.value.userName, this.workoutForm.value.workoutType, this.workoutForm.value.workoutMinutes);
+      this.clearValues();
     }
+  }
 
-    const indexOfExistingElement = dataToSave.findIndex((elem: any) => elem.name === this.workoutForm.value.userName)
+  clearErrors() {
+    this.userNameError = false;
+    this.workoutTypeError = false;
+    this.workoutMinuteAbsentError = false;
+    this.workoutMinuteInvalidError = false;
+  }
 
-    if(indexOfExistingElement !== -1) { // this is for when we are entering a new workout for an existing user
-
-      // get the existing entry
-      const existingVal = dataToSave[indexOfExistingElement];
-      //insert this new workout into existing entry's workout array
-      existingVal['workouts'].push({ type: this.workoutForm.value.workoutType, minutes: Number(this.workoutForm.value.workoutMinutes) });
-      //put back this updated value into dataToSave at the correct place
-      dataToSave[indexOfExistingElement] = existingVal;
-    } else { // for a new user entry
-
-      const newEntry = {
-        id: dataToSave.length + 1, // this will allow us to create auto-increasing ids
-        name: this.workoutForm.value.userName,
-        workouts: [
-          { type: this.workoutForm.value.workoutType, minutes: Number(this.workoutForm.value.workoutMinutes) }
-        ]
-      };
-      dataToSave.push(newEntry);
-    }
-
-    localStorage.setItem(key, JSON.stringify(dataToSave)); // put dataToSave as string into localStorage
+  clearValues() {
+    this.workoutForm.setValue({userName : null, workoutType: null, workoutMinutes: null});
   }
 }
