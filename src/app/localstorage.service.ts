@@ -5,6 +5,23 @@ const key: string = 'userData'; // the key for localStorage
   providedIn: 'root'
 })
 export class LocalstorageService {
+  public userData: any[];
+
+  constructor() {
+    this.userData = this.getUserData();
+  }
+
+  searchData(userName: string, workoutType?: string) {
+    var x = localStorage.getItem(key);
+    if(x === null) {
+      return;
+    }
+    var a = JSON.parse(x);
+    
+    a = a.filter((elem: any) => elem.name === userName);
+    
+    this.userData = this.transform(a);
+  }
 
   setUserData(userName: string, workoutType: string, workoutMinutes: number): void {
     var x = localStorage.getItem(key);
@@ -38,19 +55,20 @@ export class LocalstorageService {
     }
 
     localStorage.setItem(key, JSON.stringify(dataToSave)); // put dataToSave as string into localStorage
+
+    this.userData = this.getUserData();
   }
 
-  getUserData(): any[] {
+  private getUserData(): any[] {
     var x = localStorage.getItem(key);
     if (x === null) {
       return [];
     } else {
-      return this.transform(x);
+      return this.transform(JSON.parse(x));
     }
   }
 
-  private transform(inputFromLocal: any): any[] {
-    const JSONfromLocal = JSON.parse(inputFromLocal);
+  private transform(JSONfromLocal: any): any[] {
     const toReturn = JSONfromLocal.map((element: any) => {
       const workouts = element["workouts"].map((workout: any) => workout.type).join(', ');
       const totalWorkoutMinutes = element["workouts"].reduce(

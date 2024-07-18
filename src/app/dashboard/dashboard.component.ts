@@ -9,13 +9,8 @@ import { LocalstorageService } from '../localstorage.service';
 export class DashboardComponent implements OnInit {
   userData: any[] = [];
 
-  constructor(private localStorageService: LocalstorageService) {}
+  constructor(public localStorageService: LocalstorageService) {}
 
   ngOnInit(): void {
-    this.getUserData();
-  }
-
-  getUserData() {
-    this.userData = this.localStorageService.getUserData();
   }
 }

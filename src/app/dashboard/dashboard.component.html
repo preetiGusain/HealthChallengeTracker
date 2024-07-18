@@ -18,7 +18,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700" *ngFor="let data of userData">
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700" *ngFor="let data of localStorageService.userData">
                 <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                     {{data.name}}
                 </th>
